@@ -29,7 +29,8 @@ CREATE TABLE ratings (
 	timestamp bigint,
 	FOREIGN KEY (userid) REFERENCES users(userid) ON DELETE CASCADE,
 	FOREIGN KEY (movieid) REFERENCES movies(movieid) ON DELETE CASCADE,
-	CHECK (rating>=0 AND rating<= 5)	
+	CHECK (rating>=0 AND rating<= 5),
+	UNIQUE (userid,movieid)
 );
 
 CREATE TABLE tags (
