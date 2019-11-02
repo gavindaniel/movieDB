@@ -73,7 +73,32 @@ WHERE t2.genreid = 5;
 
 
 
+-- query7
+CREATE TABLE query7 AS
+SELECT AVG(rating) AS average FROM ((SELECT movieid, COUNT(movieid) AS countmid
+FROM (SELECT movieid, genreid FROM hasagenre WHERE genreid = 5 OR genreid = 14) t1
+GROUP BY movieid) t2
+INNER JOIN 
+(SELECT movieid, rating FROM ratings) t3
+ON t2.movieid = t3.movieid)
+WHERE countmid > 1;
 
+
+-- query8
+CREATE TABLE query8 AS
+SELECT AVG(rating) AS average
+FROM ((SELECT movieid, genreid FROM hasagenre 
+	WHERE genreid = 14 AND NOT genreid = 5) t1
+INNER JOIN
+(SELECT movieid, rating FROM ratings) t2
+ON t1.movieid = t2.movieid);
+
+
+-- query9
+CREATE TABLE query9 AS
+SELECT movieid, rating
+FROM ratings
+WHERE userid = 1;
 
 
 
