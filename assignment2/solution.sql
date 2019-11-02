@@ -64,6 +64,15 @@ ON t1.movieid = t2.movieid);
 
 -- query6
 CREATE TABLE query6 AS
+SELECT AVG(rating) AS average
+FROM ((SELECT movieid, rating FROM ratings) t1
+INNER JOIN
+(SELECT movieid, genreid FROM hasagenre) t2
+ON t1.movieid = t2.movieid)
+WHERE t2.genreid = 5;
+
+
+
 
 
 
