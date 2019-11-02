@@ -86,12 +86,18 @@ WHERE countmid > 1;
 
 -- query8
 CREATE TABLE query8 AS
-SELECT AVG(rating) AS average
-FROM ((SELECT movieid, genreid FROM hasagenre 
-	WHERE genreid = 14 AND NOT genreid = 5) t1
-INNER JOIN
-(SELECT movieid, rating FROM ratings) t2
-ON t1.movieid = t2.movieid);
+SELECT AVG(rating) AS average FROM (((
+SELECT movieid, COUNT(movieid) AS countmid
+FROM (SELECT movieid, genreid FROM hasagenre 
+	WHERE genreid = 14 OR genreid = 5) t1
+GROUP BY movieid) t2
+INNER JOIN 
+(SELECT movieid, genreid FROM hasagenre WHERE genreid = 14) t3
+ON t2.movieid = t3.movieid)
+INNER JOIN 
+(SELECT movieid, rating FROM ratings) t4
+ON t2.movieid = t4.movieid)
+WHERE countmid = 1;
 
 
 -- query9
