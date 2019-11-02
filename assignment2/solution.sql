@@ -13,65 +13,63 @@ ON t1.genreid = t2.genreid;
 -- query2
 CREATE TABLE query2 AS
 SELECT 
-name, moviecount
+name, AVG(rating) as rating 
 FROM
-(SELECT genreid, name FROM genres) t1 
+((SELECT movieid, genreid FROM hasagenre) t1 
 INNER JOIN
-(SELECT genreid, COUNT(*) AS moviecount FROM hasagenre GROUP BY genreid) t2
-ON t1.genreid = t2.genreid;
+(SELECT movieid, rating FROM ratings) t2
+ON t1.movieid = t2.movieid
+INNER JOIN
+(SELECT genreid, name FROM genres) t4
+ON t1.genreid = t4.genreid)
+GROUP BY t4.name;
 
 
 
-
-
-
-
--- get's avg rating for each movie
-SELECT movieid, AVG(rating) AS avgrating 
-FROM ratings 
-GROUP BY movieid;
-
-
--- testing: gets average of all ratings
-SELECT AVG(avgrating) AS rating
-FROM (SELECT movieid, AVG(rating) AS avgrating FROM ratings GROUP BY movieid) t1
-
-
-
--- testing: gets average of all ratings
-SELECT AVG(avgrating) AS rating
-FROM (SELECT movieid, AVG(rating) AS avgrating FROM ratings GROUP BY movieid) t1
-
-
-
--- testing
-SELECT *
-FROM hasagenre, (SELECT movieid, AVG(rating) AS avgrating FROM ratings GROUP BY movieid) t1
-WHERE hasagenre.movieid = t1.movieid;
-
-
--- testing
+-- query3
+CREATE TABLE query3 AS
 SELECT 
-*
-FROM
-(SELECT movieid, genreid FROM hasagenre) t1 
+title, countofratings
+FROM 
+((SELECT movieid, COUNT(rating) as countofratings FROM ratings GROUP BY movieid) t1
 INNER JOIN
-(SELECT movieid, AVG(rating) AS avgrating FROM ratings GROUP BY movieid) t2
-ON t1.movieid = t2.movieid;
+(SELECT movieid, title FROM movies) t2
+ON t1.movieid = t2.movieid)
+WHERE t1.countofratings >= 10;
+
+
+
+-- query4
+CREATE TABLE query4 AS
+SELECT
+t1.movieid, title
+FROM
+((SELECT movieid, title FROM movies) t1
+INNER JOIN
+(SELECT movieid, genreid FROM hasagenre) t2
+ON t1.movieid = t2.movieid)
+WHERE t2.genreid = 5;
+
+
+-- query5
+CREATE TABLE query5 AS
+SELECT
+title, average
+FROM
+((SELECT movieid, AVG(rating) AS average FROM ratings GROUP BY movieid) t1
+INNER JOIN 
+(SELECT movieid, title FROM movies) t2
+ON t1.movieid = t2.movieid);
+
+
+-- query6
+CREATE TABLE query6 AS
 
 
 
 
 
 
-SELECT *
-FROM (((SELECT genreid, movieid FROM hasagenre) t1
-	INNER JOIN 
-	(SELECT genreid, name FROM genres) t2
-	ON t1.genreid = t2.genreid)
-	INNER JOIN 
-	(SELECT movieid, AVG(rating) AS avgrating FROM ratings GROUP BY movieid) t3
-	ON t1.movieid = t3.movieid);
 
 
 
