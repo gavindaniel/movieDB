@@ -107,6 +107,8 @@ FROM ratings
 WHERE userid = 1;
 
 
+-- recommendation
+CREATE TABLE recommendation AS
 
 
 
